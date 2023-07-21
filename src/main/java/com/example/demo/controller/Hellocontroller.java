@@ -9,7 +9,7 @@ public class Hellocontroller {
 	
 	@GetMapping("/")
 	public String index() {
-		return "Geeting from sping Boot!";
+		return "Hello sping Boot!";
 	}
 
 }

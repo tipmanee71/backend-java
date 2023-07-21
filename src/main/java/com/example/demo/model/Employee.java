@@ -1,27 +1,27 @@
 package com.example.demo.model;
 
 public class Employee {
-	private Integer employee;
+	private Integer employeeid; //private เรียกใช้ได้แค่ภายใน class   
 	private String firstName;
 	private String lastName;
-	private Integer sarary;
+	private Integer salary;
 	
 	
 	public Employee() {
 		super();
 	}
-	public Employee(Integer employee, String firstName, String lastName, Integer sarary) {
+	public Employee(Integer employeeid, String firstName, String lastName, Integer salary) {
 		super();
-		this.employee = employee;
+		this.employeeid = employeeid;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.sarary = sarary;
+		this.salary = salary;
 	}
-	public Integer getEmployee() {
-		return employee;
+	public Integer getEmployeeid() {
+		return employeeid;
 	}
-	public void setEmployee(Integer employee) {
-		this.employee = employee;
+	public void setEmployee(Integer employeeid) {
+		this.employeeid = employeeid;
 	}
 	public String getFirstName() {
 		return firstName;
@@ -35,12 +35,13 @@ public class Employee {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public Integer getSarary() {
-		return sarary;
+	public Integer getSalary() {
+		return salary;
 	}
-	public void setSarary(Integer sarary) {
-		this.sarary = sarary;
+	public void setSalary(Integer salary) {
+		this.salary = salary;
 	}
+	
 	
 
 }
