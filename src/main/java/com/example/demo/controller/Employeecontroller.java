@@ -1,122 +1,115 @@
 package com.example.demo.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Employee;
-import com.example.demo.model.Product;
 import com.example.demo.repository.EmployeeRepository;
 
 @RestController
-public class Employeecontroller {
+public class EmployeeController {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
 
-//	private List<Employee> data = new ArrayList<Employee>();
-
-	@GetMapping("employee")
-	public List<Employee> getEmployee() {
-		return employeeRepository.findAll();
+	@GetMapping("/employee")
+	public ResponseEntity<Object> getEmployee() {
+     try {		
+	     List<Employee> employees = employeeRepository.findAll(); 	
+		 return new ResponseEntity<>(employees, HttpStatus.OK);
+	} catch (Exception e) {	
+		return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@PostMapping("/employee") // ยิง method //ถ้ามี post จะมี body
-	public Employee addEmployee(@RequestBody Employee body) {
-//		for (int i = 0; i < data.size(); i++) {
-//			if (body.getEmployeeid() == data.get(i).getEmployeeid()) { /// หาเพื่อมีหรือไม่แต่ไม่ได้นำไปใช่ต่อ
-//				return null;
-//			}
-//		}
-		// data.add(body);
-
-		return employeeRepository.save(body);
 	}
 
-	// สามารถส่งไอดีอะไรก็ได้ที่เป็น integer ถ้าส่งชนิดอื่นจะerror
-
-	@GetMapping("/employee/{employeeid}")
-	public Optional<Employee> getEmployeeDetail(@PathVariable Integer employeeid) {
-//		System.out.println("empolyeeid =" + employeeid);
-//
-//		for (int i = 0; i < data.size(); i++) {
-//			if (employeeid == data.get(i).getEmployeeid()) { // หาว่ามีและนำไปใช้ต่อ
-//				return data.get(i);
-//			}
-//		}
-
-		Optional<Employee> employee = employeeRepository.findById(employeeid);
-
-		return employee;
-	}
-
-	@PutMapping("employee/{employeeid}")
-	public Employee updateEmployee(@PathVariable Integer employeeid, @RequestBody Employee body) {
-
-//		for (int i = 0; i < data.size(); i++) {
-//			if (employeeid == data.get(i).getEmployeeid()) {
-//
-//				data.get(i).setFirstName(body.getFirstName());
-//				data.get(i).setLastName(body.getLastName());
-//				data.get(i).setSalary(body.getSalary());
-//
-//				return data.get(i);
-//			}
-//		}
-
-		Optional<Employee> employee = employeeRepository.findById(employeeid);
-
-		if (employee.isPresent()) {
-			// or Employee employeeEdit =	employee.get();
-			employee.get().setFirstName(body.getFirstName());   // or //employeeEdit.setFirstName(body.getFirstName()); 
-			employee.get().setLastName(body.getLastName());		// or //employeeEdit.setLastName(body.getLastName());	
-			employee.get().setSalary(body.getSalary());			// or //employeeEdit.setSalary(body.getSalary());	
-			employee.get().setEmployeeid(body.getEmployeeid());	// or //employeeEdit.setEmployeeid(body.getEmployeeid());
-
-			employeeRepository.save(employee.get()); //or //	employeeRepository.save(employeeEdit);
-			return employee.get();
-
-		} else {
-			return null;
+	@PostMapping("/employee")
+	public ResponseEntity<Object> addEmployee(@RequestBody Employee body) {
+		
+		try {
+			Employee employee =  employeeRepository.save(body);
+			
+			return new ResponseEntity<>(employee, HttpStatus.CREATED);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+		
 	}
 
-	@DeleteMapping("employee/{employeeid}")
-	public String deleteString(@PathVariable Integer employeeid, @RequestBody Employee body) {
+	@GetMapping("/employee/{employeeId}")
+	public ResponseEntity<Object> getEmployeeDetail(@PathVariable Integer employeeId) {
 
-//		for (int i = 0; i < data.size(); i++) {
-//			if (employeeid == data.get(i).getEmployeeid()) {
-//				data.remove(i);
-//				return "delete sucsess;";
-//
-//			}
-//		}
-//
-//		return "employee not found";
-	
-			Optional<Employee> employee = employeeRepository.findById(employeeid);		
-		
-			if ( employee.isPresent()) {
-				employeeRepository.delete(employee.get());
-				
-				return "delete sucsess;";
-				
+		try {		
+			Optional<Employee> employee = employeeRepository.findById(employeeId);
+			if(employee.isPresent()) {
+				return new ResponseEntity<>(employee, HttpStatus.OK);
 			}else {
-				return "employee not found";
+				return new ResponseEntity<>("Employee not found", HttpStatus.BAD_REQUEST);
 			}
-		
+					
+		} catch (Exception e) {
+			return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		
+	}
 
+	@PutMapping("employee/{employeeId}")
+	public ResponseEntity<Object> updateEmployee(@PathVariable Integer employeeId, @RequestBody Employee body) {
+
+		try {
+			Optional<Employee> employee = employeeRepository.findById(employeeId);
+
+			if (employee.isPresent()) {
+				Employee employeeEdit = employee.get();
+				employeeEdit.setFirstName(body.getFirstName());
+				employeeEdit.setLastName(body.getLastName());
+				employeeEdit.setSalary(body.getSalary());
+				employeeEdit.setEmployeeId(body.getEmployeeId());
+
+				employeeRepository.save(employeeEdit);
+
+				return new ResponseEntity<>(employeeEdit, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>("Employee not found", HttpStatus.BAD_REQUEST);
+			}
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+
+	@DeleteMapping("employee/{employeeId}")
+	public ResponseEntity<Object> deleteEmployee(@PathVariable Integer employeeId) {
+        
+		try {
+			Optional<Employee> employee = employeeRepository.findById(employeeId);
+
+			if (employee.isPresent()) {
+				employeeRepository.delete(employee.get());
+
+				return  new ResponseEntity<>("DELETE SUCSESS", HttpStatus.OK );
+			} else {
+				return new ResponseEntity<>("Employee not found", HttpStatus.BAD_REQUEST);
+			}			
+		} catch (Exception e) {
+			return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		
+	}
 
 }

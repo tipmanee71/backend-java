@@ -7,47 +7,34 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "employee")
+@Table(name="employee")
 public class Employee {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	private Integer employeeid; // private เรียกใช้ได้แค่ภายใน class
+@Id
+@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer employeeId;
 	private String firstName;
 	private String lastName;
 	private Integer salary;
-
 	
-	
-
 	public Employee() {
 		super();
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
+		}
 	
-	public Employee(Integer employeeid, String firstName, String lastName, Integer salary) {
+	public Employee(Integer employeeId, String firstName, String lastName, Integer salary) {
 		super();
-		this.employeeid = employeeid;
+		this.employeeId = employeeId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.salary = salary;
 	}
 
-
-	public Integer getEmployeeid() {
-		return employeeid;
+	public Integer getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setEmployeeid(Integer employeeid) {
-		this.employeeid = employeeid;
+	public void setEmployeeId(Integer employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public String getFirstName() {
@@ -73,5 +60,6 @@ public class Employee {
 	public void setSalary(Integer salary) {
 		this.salary = salary;
 	}
+	
 
 }
